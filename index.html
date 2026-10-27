@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS // The Rail Fence Cipher Experience</title>
+  
+  <!-- Futuristic Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/nexus.css">
+</head>
+<body>
+  <!-- Ambient Particle Starfield -->
+  <canvas id="nexus-particle-canvas"></canvas>
+
+  <!-- =====================================================================
+       CINEMATIC INTRO SCREEN
+       ===================================================================== -->
+  <div id="cinematic-intro" class="cinematic-intro">
+    <button id="btn-skip-intro" class="skip-intro-btn">SKIP INTRO [ESC]</button>
+    
+    <div class="intro-symbol-container">
+      <svg class="intro-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer rotating cyan diamond -->
+        <polygon points="50,5 95,50 50,95 5,50" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="8 6"/>
+        <!-- Inner emerald triangle -->
+        <polygon points="50,22 80,74 20,74" stroke="#00ff9d" stroke-width="2"/>
+        <!-- Zigzag trail through center -->
+        <polyline points="20,62 35,38 50,62 65,38 80,62" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Core quantum node -->
+        <circle cx="50" cy="50" r="4" fill="#00ff9d"/>
+      </svg>
+    </div>
+
+    <div class="intro-badge">
+      <span class="beacon"></span>
+      <span>SYSTEM SECURE // PROTOCOL 7</span>
+    </div>
+
+    <h1 class="intro-title">NEXUS</h1>
+    <h2 class="intro-subtitle">THE RAIL FENCE CIPHER EXPERIENCE</h2>
+    <p class="intro-tagline">“Your message is the path. Your key controls the journey.”</p>
+
+    <div class="intro-actions">
+      <button id="btn-enter-system" class="btn-intro-enter">ENTER THE SYSTEM</button>
+      <button id="btn-open-guide-intro" class="btn-intro-guide">HOW IT WORKS</button>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MAIN APPLICATION SHELL
+       ===================================================================== -->
+  <div class="nexus-app">
+    
+    <!-- Top HUD Navigation -->
+    <header class="nexus-header">
+      <div class="header-brand" id="brand-home">
+        <svg class="header-logo-icon" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,3 37,20 20,37 3,20" stroke="#00f0ff" stroke-width="1.8"/>
+          <polyline points="10,24 16,14 24,26 30,16" stroke="#00ff9d" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="2.5" fill="#ffffff"/>
+        </svg>
+        <div class="header-title-block">
+          <h1>NEXUS</h1>
+          <p>BIOLUMINESCENT CRYPTOGRAPHY</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-toggle-sound" class="hud-btn" title="Toggle Sound [M]">
+          <span id="sound-icon">🔇</span>
+          <span id="sound-label">AUDIO: MUTED</span>
+        </button>
+
+        <button id="btn-open-trials" class="hud-btn hud-btn-trials" title="Launch Arcade Mode">
+          <span>⚡</span>
+          <span>THE TRIALS</span>
+        </button>
+
+        <button id="btn-open-guide" class="hud-btn" title="Cipher Architecture Guide">
+          <span>📖</span>
+          <span>HOW IT WORKS</span>
+        </button>
+
+        <button id="btn-global-reset" class="hud-btn" title="Reset Realm [R]">
+          <span>↺</span>
+          <span>RESET</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mission Control Workspace -->
+    <main class="nexus-workspace">
+
+      <!-- Telemetry Dashboard: Mission Control System -->
+      <section class="telemetry-grid">
+        <!-- The Original Message -->
+        <div class="telemetry-card card-emerald">
+          <div class="card-label">
+            <span>Original Message</span>
+            <span id="val-plain-len">[LEN: 10]</span>
+          </div>
+          <div class="card-value accent-emerald" id="val-plain-text">HELLOWORLD</div>
+          <div class="card-subtext">
+            <span>● PLAINTEXT STREAM</span>
+          </div>
+        </div>
+
+        <!-- The Cipher Monitor -->
+        <div class="telemetry-card card-amber">
+          <div class="card-label">
+            <span>Cipher Monitor</span>
+            <span id="val-cipher-status">[HARVEST: READY]</span>
+          </div>
+          <div class="card-value accent-amber" id="val-cipher-text">PENDING...</div>
+          <div class="card-subtext">
+            <span>★ ROW TRANSPOSITION</span>
+          </div>
+        </div>
+
+        <!-- The Live Character Inspector -->
+        <div class="telemetry-card">
+          <div class="card-label">
+            <span>Live Inspector</span>
+            <span id="val-step-index">STEP 00 / 10</span>
+          </div>
+          <div class="card-value accent-cyan" id="val-inspector-char">-</div>
+          <div class="card-subtext" id="val-inspector-coords">
+            <span>RAIL: --</span> | <span>DIR: --</span>
+          </div>
+        </div>
+
+        <!-- The Signal Meter & Score -->
+        <div class="telemetry-card card-magenta">
+          <div class="card-label">
+            <span>Signal Progress</span>
+            <span id="val-progress-pct">0%</span>
+          </div>
+          <div class="card-value" id="val-progress-fraction">0 / 10</div>
+          <div class="signal-meter-bar">
+            <div id="signal-meter-fill" class="signal-meter-fill"></div>
+          </div>
+        </div>
+
+        <!-- The Key Observatory -->
+        <div class="telemetry-card">
+          <div class="card-label">
+            <span>Key Observatory</span>
+            <span id="val-period-cycle">CYCLE: 4</span>
+          </div>
+          <div class="card-value accent-cyan" id="val-key-display">3 RAILS</div>
+          <div class="card-subtext">
+            <span>BOUNCE FREQUENCY: 2(K-1)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- The Central Cipher Realm Board -->
+      <section class="cipher-realm-container">
+        <!-- SVG Canvas where 3D luminous rails and Keykeeper Serpent live -->
+        <svg id="realm-svg" class="realm-svg-canvas"></svg>
+
+        <!-- Empty State Overlay before initialization -->
+        <div id="realm-empty-state" class="realm-empty-state hidden">
+          <svg class="empty-icon" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="26" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <polyline points="18,34 26,24 34,36 42,26" stroke="#00ff9d" stroke-width="2"/>
+          </svg>
+          <h3>CIRCUIT DORMANT</h3>
+          <p>Configure your message and rail key in the command console below, then execute to awaken the Keykeeper.</p>
+          <button id="btn-quick-start" class="btn-intro-enter" style="padding: 10px 24px; font-size: 0.85rem;">
+            INITIALIZE DEFAULT CIPHER
+          </button>
+        </div>
+
+        <!-- Transformation Reveal Overlay -->
+        <div id="transformation-banner" class="transformation-banner">
+          <div>
+            <div class="transform-caption">“POSITION CHANGES. MESSAGE PRESERVED.”</div>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim); margin-top: 2px;">
+              CIPHERTEXT HARVESTED ROW-BY-ROW
+            </div>
+          </div>
+          <button id="btn-copy-ciphertext" class="btn-copy-result">COPY CIPHERTEXT</button>
+        </div>
+      </section>
+
+      <!-- The Command Console -->
+      <section class="command-console">
+        <!-- Console Top Row: Input, Rails, Mode, Primary Action -->
+        <div class="console-top-row">
+          
+          <!-- Message Input -->
+          <div class="console-input-group">
+            <div class="console-label">
+              <span id="input-mode-label">PLAINTEXT INPUT</span>
+              <span>[MAX 36 CHARS]</span>
+            </div>
+            <div class="input-container">
+              <input type="text" id="cipher-input" class="console-input" value="HELLOWORLD" maxlength="36" spellcheck="false" autocomplete="off">
+            </div>
+            <div class="preset-chips">
+              <span class="chip" data-text="HELLOWORLD">HELLOWORLD</span>
+              <span class="chip" data-text="NEXUSCIPHER">NEXUSCIPHER</span>
+              <span class="chip" data-text="DEFENDTHEGRID">DEFENDTHEGRID</span>
+              <span class="chip" data-text="SECRETPROTOCOL">SECRETPROTOCOL</span>
+              <span class="chip" data-text="BIOLUMINESCENCE">BIOLUMINESCENCE</span>
+            </div>
+          </div>
+
+          <!-- Stepped Rail Key Selector -->
+          <div class="console-rail-group">
+            <div class="console-label">
+              <span>RAIL CONFIGURATION (KEY)</span>
+              <span id="current-rail-indicator">KEY: 3</span>
+            </div>
+            <div class="stepped-rail-selector" id="rail-selector">
+              <button class="rail-step-btn" data-rails="2">2</button>
+              <button class="rail-step-btn active" data-rails="3">3</button>
+              <button class="rail-step-btn" data-rails="4">4</button>
+              <button class="rail-step-btn" data-rails="5">5</button>
+              <button class="rail-step-btn" data-rails="6">6</button>
+            </div>
+          </div>
+
+          <!-- Operation Mode Toggle -->
+          <div class="console-mode-group">
+            <div class="console-label">
+              <span>MODE</span>
+            </div>
+            <div class="mode-toggle-pill">
+              <button id="mode-encrypt" class="mode-pill-btn active encrypt">ENCRYPT</button>
+              <button id="mode-decrypt" class="mode-pill-btn decrypt">DECRYPT</button>
+            </div>
+          </div>
+
+          <!-- Primary Execution Action -->
+          <div>
+            <button id="btn-init-cipher" class="btn-initialize-cipher">
+              INITIALIZE CIPHER
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Console Bottom Row: Playback, Manual Stepping, Speed, Normalization -->
+        <div class="console-bottom-row">
+          <div class="playback-controls">
+            <button id="btn-play-pause" class="btn-control primary-play" title="Play or Pause Auto-play [Space]">
+              <span id="play-pause-icon">▶</span>
+              <span id="play-pause-label">AUTO-PLAY</span>
+            </button>
+
+            <button id="btn-step-forward" class="btn-control" title="Advance Next Character [→]">
+              <span>⏭</span>
+              <span>NEXT STEP</span>
+            </button>
+
+            <button id="btn-reset-playback" class="btn-control" title="Rewind to Start [R]">
+              <span>↺</span>
+              <span>RESET</span>
+            </button>
+          </div>
+
+          <!-- Speed Modes -->
+          <div class="speed-group">
+            <span class="speed-label">SPEED:</span>
+            <div class="speed-chips">
+              <button class="speed-chip" data-speed="slow">SLOW 1x</button>
+              <button class="speed-chip active" data-speed="normal">NORMAL 2x</button>
+              <button class="speed-chip" data-speed="hyper">HYPER 5x</button>
+            </div>
+          </div>
+
+          <!-- Normalization Toggle -->
+          <label class="normalization-toggle" title="Classical uppercase transposition">
+            <input type="checkbox" id="check-normalize" checked>
+            <span>NORMALIZE (A-Z UPPERCASE)</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Keyboard Shortcuts Footnote -->
+      <footer class="keyboard-shortcuts-bar">
+        <span><span class="kbd">SPACE</span> Play / Pause</span>
+        <span><span class="kbd">→</span> Step Next</span>
+        <span><span class="kbd">R</span> Reset</span>
+        <span><span class="kbd">M</span> Mute / Sound</span>
+        <span><span class="kbd">ESC</span> Close Modal</span>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 1: HOW IT WORKS (CIPHER ARCHITECTURE & TUTORIAL)
+       ===================================================================== -->
+  <div id="modal-guide" class="nexus-modal-overlay">
+    <div class="nexus-modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h2>THE RAIL FENCE CIPHER</h2>
+          <p>TRANSPOSITION CRYPTOGRAPHY PROTOCOL</p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-guide">&times;</button>
+      </div>
+      <div class="modal-content">
+        <div class="guide-card">
+          <h3>01 // The Core Concept</h3>
+          <p>
+            The Rail Fence Cipher (also known as the Zigzag Cipher) is a classical transposition cipher.
+            Unlike substitution ciphers (such as Caesar), the characters themselves are never changed or replaced.
+            Instead, <strong>their positions are rearranged along a geometrical zigzag path</strong> across a set number of parallel "rails".
+          </p>
+        </div>
+
+        <div class="guide-card">
+          <h3>02 // The Zigzag Geometry</h3>
+          <p>
+            With a Key of <strong>3 Rails</strong>, characters bounce between the top rail (APEX) and bottom rail (NADIR).
+            For the message <code>HELLOWORLD</code>:
+          </p>
+          <pre class="guide-zigzag-diagram">
+RAIL 0:  H . . . O . . . L .   -->  H O L
+RAIL 1:  . E . L . W . R . D   -->  E L W R D
+RAIL 2:  . . L . . . O . . .   -->  L O
+
+COLLECTED CIPHERTEXT: H O L + E L W R D + L O  =  HOLELWRDLO
+          </pre>
+        </div>
+
+        <div class="guide-card">
+          <h3>03 // Deterministic Reversal (Decryption)</h3>
+          <p>
+            To reconstruct the original message, the system calculates the length of the ciphertext and traces the empty zigzag path.
+            It calculates exactly how many characters belong to each rail, places the ciphertext letters into their respective rail rows,
+            and then the Keykeeper traces the zigzag path to read out the letters in original chronological order.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 2: THE CRYPTANALYST TRIALS (ARCADE CHALLENGE MODE)
+       ===================================================================== -->
+  <div id="modal-trials" class="nexus-modal-overlay">
+    <div class="nexus-modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h2>THE CRYPTANALYST TRIALS</h2>
+          <p>ARCADE TRANSPOSITION CHALLENGE</p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-trials">&times;</button>
+      </div>
+
+      <div class="modal-content">
+        <!-- Arcade HUD Bar -->
+        <div class="trials-hud">
+          <div class="trials-stat">
+            <span class="trials-stat-label">SCORE</span>
+            <span class="trials-stat-val" id="trial-val-score">0</span>
+          </div>
+          <div class="trials-stat">
+            <span class="trials-stat-label">HIGH SCORE</span>
+            <span class="trials-stat-val" id="trial-val-high">0</span>
+          </div>
+          <div class="trials-stat">
+            <span class="trials-stat-label">STREAK</span>
+            <span class="trials-stat-val" id="trial-val-streak" style="color: var(--neon-amber);">0x</span>
+          </div>
+          <div class="trials-stat">
+            <span class="trials-stat-label">TIME REMAINING</span>
+            <span class="trials-stat-val" id="trial-val-timer" style="color: var(--neon-cyan);">--</span>
+          </div>
+        </div>
+
+        <!-- Tier Tabs -->
+        <div class="tier-selector-tabs">
+          <button class="tier-tab active" data-tier="initiate">INITIATE (2-3 RAILS)</button>
+          <button class="tier-tab" data-tier="operative">OPERATIVE (3-4 RAILS, 45S)</button>
+          <button class="tier-tab" data-tier="master">MASTER CRYPTANALYST (4-6 RAILS, 30S)</button>
+        </div>
+
+        <!-- Challenge Prompt Card -->
+        <div class="trial-challenge-card">
+          <div class="challenge-row">
+            <div>
+              <span class="challenge-prompt">INTERCEPTED PLAINTEXT:</span>
+              <div class="challenge-message-display" id="trial-target-plaintext">CIPHER</div>
+            </div>
+            <div style="text-align: right;">
+              <span class="challenge-prompt">RAIL KEY:</span>
+              <div class="challenge-message-display" id="trial-target-key" style="color: var(--neon-amber);">2 RAILS</div>
+            </div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            Predict the resulting ciphertext generated by passing this plaintext through the Rail Fence Cipher.
+          </p>
+
+          <form id="trial-submit-form" class="trial-input-row" onsubmit="return false;">
+            <input type="text" id="trial-user-input" class="trial-input" placeholder="ENTER PREDICTED CIPHERTEXT..." autocomplete="off" spellcheck="false">
+            <button type="submit" id="btn-submit-trial" class="trial-submit-btn">SUBMIT</button>
+          </form>
+        </div>
+
+        <!-- Trial Evaluation Results (Shown after submission) -->
+        <div id="trial-result-card" class="trial-eval-card" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 id="trial-eval-title" style="font-family: var(--font-display); letter-spacing: 1.5px;">EVALUATION COMPLETE</h4>
+            <span id="trial-eval-accuracy" style="font-family: var(--font-mono); font-weight: bold; color: var(--neon-emerald);">100% ACCURACY</span>
+          </div>
+
+          <div class="char-diff-track" id="trial-diff-container">
+            <!-- Diff badges populated here -->
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 6px;">
+            <button id="btn-visualize-trial" class="hud-btn" style="border-color: var(--neon-cyan); color: var(--neon-cyan);">
+              VISUALIZE IN CIPHER REALM
+            </button>
+            <button id="btn-next-trial" class="trial-submit-btn" style="padding: 8px 20px;">
+              NEXT CHALLENGE
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Feedback -->
+  <div id="nexus-toast" class="nexus-toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-msg">COPIED TO CLIPBOARD</span>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="js/cipher.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/serpent.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/trials.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
